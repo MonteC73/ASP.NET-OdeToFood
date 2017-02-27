@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OdeToFood;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OdeToFood.Controllers;
+using System.Web.Mvc;
 
 namespace OdeToFood.Tests.Controllers
 {
@@ -35,7 +30,7 @@ namespace OdeToFood.Tests.Controllers
             ViewResult result = controller.About() as ViewResult;
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Model);
         }
 
         [TestMethod]
