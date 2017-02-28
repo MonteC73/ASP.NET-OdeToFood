@@ -1,5 +1,8 @@
 using OdeToFood.Models;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web.Security;
+using WebMatrix.WebData;
 
 namespace OdeToFood.Migrations
 {
@@ -27,6 +30,37 @@ namespace OdeToFood.Migrations
                         new RestaurantReview { Rating = 9, Body="Great food!", ReviewerName = "Scott"}
                     }
                 });
+
+            for (int i = 0; i < 1000; i++)
+            {
+                context.Restaurants.AddOrUpdate(r => r.Name,
+                    new Restaurant { Name = "Restaurant" + i, City = "Nowhere" + (i%30 + 1), Country = "USA" } );
+            }
+
+            SeedMenbership();
+
+        }
+
+        private void SeedMenbership()
+        {
+            WebSecurity.InitializeDatabaseConnection("DefaultConnection",
+                "UserProfile", "UserId", "UserName", autoCreateTables:true);
+
+            var roles = (SimpleRoleProvider) Roles.Provider;
+            var membership = (SimpleMembershipProvider) Membership.Provider;
+
+            if (!roles.RoleExists("Admin"))
+            {
+                roles.CreateRole("Admin");
+            }
+            if (membership.GetUser("sallen", false) == null)
+            {
+                membership.CreateUserAndAccount("sallen", "imalittleteapot");
+            }
+            if (!roles.GetRolesForUser("sallen").Contains("Admin"))
+            {
+                roles.AddUsersToRoles(new[] {"sallen"}, new[] {"Admin"});
+            }
         }
     }
 }
