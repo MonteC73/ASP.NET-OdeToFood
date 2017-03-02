@@ -11,7 +11,7 @@ namespace OdeToFood.Controllers
         public ActionResult Index([Bind(Prefix = "id")] int restaurantId)
         {
             var restaurant = _db.Restaurants.Find(restaurantId);
-            if (restaurantId != null)
+            if (restaurant != null)
             {
                 return View(restaurant);
             }

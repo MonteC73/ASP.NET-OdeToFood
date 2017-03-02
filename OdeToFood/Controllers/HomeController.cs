@@ -8,11 +8,23 @@ namespace OdeToFood.Controllers
 {
     public class HomeController : Controller
     {
-        OdeToFoodDb _db = new OdeToFoodDb();
+        //OdeToFoodDb _db = new OdeToFoodDb(); //
+
+        IOdeToFoodDb _db;
+
+        public HomeController()
+        {
+            _db = new OdeToFoodDb();
+        }
+
+        public HomeController(IOdeToFoodDb db)
+        {
+            _db = db;
+        }
 
         public ActionResult Autocomplete(string term)
         {
-            var model = _db.Restaurants
+            var model = _db.Query<Restaurant>()
                 .Where(r => r.Name.StartsWith(term))
                 .Select(r => new
                 {
@@ -36,7 +48,7 @@ namespace OdeToFood.Controllers
             //        CountOfReviews = r.Reviews.Count()
             //    };
 
-            var model = _db.Restaurants
+            var model = _db.Query<Restaurant>()
                 .OrderByDescending(r => r.Reviews.Average(review => review.Rating))
                 .Where(r => searchTerm == null || r.Name.StartsWith(searchTerm))
                 .Select(r => new RestaurantListViewModel
